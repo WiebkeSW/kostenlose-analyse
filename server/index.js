@@ -1,8 +1,10 @@
+import "dotenv/config";
 import express from "express";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { validiereFormular } from "../shared/interviewSchema.js";
+import { sendeAntwortMail } from "./mailer.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(__dirname, "data", "submissions");
@@ -21,7 +23,7 @@ function istGesperrt(ip) {
   return letzte && Date.now() - letzte < SPERRZEIT_MS;
 }
 
-app.post("/api/analyse", (req, res) => {
+app.post("/api/analyse", async (req, res) => {
   const ip = req.ip;
   if (istGesperrt(ip)) {
     return res.status(429).json({ ok: false, fehler: { _rate: "Bitte kurz warten." } });
@@ -44,7 +46,12 @@ app.post("/api/analyse", (req, res) => {
   const eintrag = { id, eingereichtAm, formular };
   fs.writeFileSync(path.join(DATA_DIR, `${id}.json`), JSON.stringify(eintrag, null, 2), "utf-8");
 
-  res.json({ ok: true, id });
+  const mailErgebnis = await sendeAntwortMail(eintrag);
+  if (!mailErgebnis.versendet) {
+    console.warn(`[analyse] Antwort-Mail für ${id} nicht versendet: ${mailErgebnis.grund}`);
+  }
+
+  res.json({ ok: true, id, mailVersendet: mailErgebnis.versendet });
 });
 
 app.get("/api/health", (_req, res) => res.json({ ok: true }));

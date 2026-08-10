@@ -9,9 +9,9 @@ um daraus ein BPMN-Prozessmodell auf Prozessebene zu erstellen.
 
 ```text
 src/          React 18 + Vite Frontend (Port 5195) — der Fragebogen-Wizard
-server/       Express-Backend (Port 4110) — Validierung + Speicherung als JSON
-shared/       Interview-Schema + Validierungsregeln, von Frontend UND Backend genutzt
-scripts/      export-prozessrohdaten.js — erzeugt BPMN-Rohdaten aus einer Submission
+server/       Express-Backend (Port 4110) — Validierung, Speicherung als JSON, Mailversand
+shared/       Interview-Schema, Validierungsregeln und Mail-Inhalt — von Frontend, Backend UND Skripten genutzt
+scripts/      export-prozessrohdaten.js, generate-antwort-mail.js — CLI-Werkzeuge pro Submission
 docs/         generierte Prozess-Exporte (siehe unten), nicht versioniert
 ```
 
@@ -19,6 +19,7 @@ docs/         generierte Prozess-Exporte (siehe unten), nicht versioniert
 
 ```bash
 npm install
+cp .env.example .env   # SMTP-Zugangsdaten eintragen, siehe unten
 npm run server    # Backend auf Port 4110
 npm run dev        # Frontend auf Port 5195, proxied /api zum Backend
 ```
@@ -43,6 +44,22 @@ Client vertrauen.
 - Mindestens 2 Prozessschritte, mindestens 2 Warum-Ebenen pro Schmerzpunkt
 - Unsichtbares Honeypot-Feld (`website_zweit`) — Bots füllen es meist blind aus
 - Einfache IP-basierte Rate-Begrenzung (30 s zwischen Anfragen)
+
+## Antwort-Mail
+
+Nach einer erfolgreichen Submission verschickt das Backend automatisch die
+Antwort-Mail an die im Formular angegebene E-Mail-Adresse — sofern SMTP in
+`.env` konfiguriert ist (siehe `.env.example`). Ohne Konfiguration läuft die
+App weiter normal, es wird nur eine Warnung geloggt und nichts versendet.
+
+Der Mail-Inhalt (Anrede, IST-Prozess-Darstellung, vorsichtiger
+Einsparungsvorschlag) liegt in `shared/mailBuilder.js` — dieselbe Logik nutzt
+auch das CLI-Skript unten, um einen Entwurf ohne Versand zu erzeugen:
+
+```bash
+npm run mail -- latest        # Entwurf als Datei, kein Versand
+npm run mail -- <submission-id>
+```
 
 ## Prozess-Rohdaten für BPMN erzeugen
 
