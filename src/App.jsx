@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Stepper from "./components/Stepper.jsx";
 import WhyKette from "./components/WhyKette.jsx";
+import EinstiegsCheck from "./components/EinstiegsCheck.jsx";
 import {
   BRANCHEN,
   GROESSENKLASSEN,
@@ -113,25 +114,44 @@ export default function App() {
 
   if (status === "ok") {
     return (
-      <div className="app app--done">
-        <h1>Danke, {formular.firma.kontaktName.split(" ")[0]}!</h1>
-        <p>
-          Wir haben alles für die Analyse von <strong>„{formular.prozessName}“</strong> bei{" "}
-          <strong>{formular.firma.name}</strong> zusammen. Wir melden uns mit dem Ergebnis per
-          E-Mail an <strong>{formular.firma.kontaktEmail}</strong>.
-        </p>
+      <div className="wrap">
+        <div className="card thanks">
+          <div className="thanks-icon">✓</div>
+          <h1>Danke, {formular.firma.kontaktName.split(" ")[0]}!</h1>
+          <p className="result-text" style={{ margin: "0 auto" }}>
+            Wir haben alles für die Analyse von <strong>„{formular.prozessName}“</strong> bei{" "}
+            <strong>{formular.firma.name}</strong> zusammen. Wir melden uns mit dem Ergebnis per
+            E-Mail an <strong>{formular.firma.kontaktEmail}</strong>.
+          </p>
+        </div>
       </div>
     );
   }
 
   if (!gestartet) {
-    return <IntroScreen onStart={() => setGestartet(true)} />;
+    return (
+      <EinstiegsCheck
+        onWeiter={(lead) => {
+          setFormular((f) => ({
+            ...f,
+            firma: {
+              ...f.firma,
+              name: lead.firma || f.firma.name,
+              kontaktName: lead.name || f.firma.kontaktName,
+              kontaktEmail: lead.email || f.firma.kontaktEmail,
+              telefon: lead.telefon || f.firma.telefon,
+            },
+          }));
+          setGestartet(true);
+        }}
+      />
+    );
   }
 
   return (
-    <div className="app" onKeyDown={onKeyDown}>
+    <div className="wrap" onKeyDown={onKeyDown}>
+      <div className="eyebrow">Kostenlose Digitalisierungs-Analyse</div>
       <header className="app__header">
-        <p className="eyebrow">Kostenlose Digitalisierungs-Analyse</p>
         <p className="app__fortschritt-text">
           Schritt {step + 1} von {STEPS.length}
         </p>
@@ -143,6 +163,7 @@ export default function App() {
         </div>
       </header>
 
+      <div className="card">
       <Stepper
         steps={STEPS}
         current={step}
@@ -209,38 +230,7 @@ export default function App() {
           </div>
         )}
       </footer>
-    </div>
-  );
-}
-
-function IntroScreen({ onStart }) {
-  return (
-    <div className="app app--intro">
-      <p className="eyebrow">Kostenlose Digitalisierungs-Analyse</p>
-      <h1>So funktioniert's</h1>
-      <p className="sub">
-        Wir stellen dir ein paar einfache Fragen zu einem Ablauf in deiner Firma — zum Beispiel,
-        wie eine Rechnung bearbeitet oder ein Urlaub genehmigt wird. Am Ende wissen wir genug, um
-        diesen Ablauf als Bild aufzuzeichnen und dir kostenlos zu zeigen, wo Digitalisierung
-        wirklich helfen würde.
-      </p>
-      <ul className="intro-fakten">
-        <li>
-          <strong>Dauer:</strong> etwa 8–10 Minuten
-        </li>
-        <li>
-          <strong>Was du brauchst:</strong> nur dein Wissen über den Ablauf — keine Unterlagen
-        </li>
-        <li>
-          <strong>Wie es abläuft:</strong> sieben kurze Schritte, du kannst jederzeit zurück
-        </li>
-        <li>
-          <strong>Danach:</strong> wir melden uns per E-Mail mit dem Ergebnis
-        </li>
-      </ul>
-      <button type="button" className="primary-btn primary-btn--gross" onClick={onStart}>
-        Los geht's
-      </button>
+      </div>
     </div>
   );
 }

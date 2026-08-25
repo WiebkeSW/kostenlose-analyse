@@ -57,22 +57,22 @@ function fliessDiagrammHtml(formular) {
         </div>
       </td>
     </tr>
-    <tr><td style="padding:2px 0 2px 18px;color:#9a958a;font-family:Arial,Helvetica,sans-serif;font-size:14px;">↓</td></tr>`;
+    <tr><td style="padding:2px 0 2px 18px;color:#4A5670;font-family:Arial,Helvetica,sans-serif;font-size:14px;">↓</td></tr>`;
 
-  const start = zelle(`<strong>Start:</strong> ${escapeHtml(formular.auslöser)}`, "#2f5d62");
+  const start = zelle(`<strong>Start:</strong> ${escapeHtml(formular.auslöser)}`, "#1D6E63");
   const schrittZellen = formular.schritte
     .filter((s) => s.beschreibung?.trim())
     .map(
       (s, i) => `
     <tr>
       <td style="padding:0 0 4px 0;">
-        <div style="display:inline-block;background:#ffffff;border:1px solid #e4ddd0;border-radius:8px;padding:10px 14px;font-family:Arial,Helvetica,sans-serif;font-size:14px;max-width:480px;">
+        <div style="display:inline-block;background:#ffffff;border:1px solid #E1E5EC;border-radius:8px;padding:10px 14px;font-family:Arial,Helvetica,sans-serif;font-size:14px;max-width:480px;">
           <strong>${i + 1}. ${escapeHtml(s.akteur || "?")}</strong> — ${escapeHtml(s.beschreibung)}
-          ${s.werkzeug ? `<br><span style="color:#8a8577;font-size:12px;">Werkzeug: ${escapeHtml(s.werkzeug)}</span>` : ""}
+          ${s.werkzeug ? `<br><span style="color:#4A5670;font-size:12px;">Werkzeug: ${escapeHtml(s.werkzeug)}</span>` : ""}
         </div>
       </td>
     </tr>
-    <tr><td style="padding:2px 0 2px 18px;color:#9a958a;font-family:Arial,Helvetica,sans-serif;font-size:14px;">↓</td></tr>`
+    <tr><td style="padding:2px 0 2px 18px;color:#4A5670;font-family:Arial,Helvetica,sans-serif;font-size:14px;">↓</td></tr>`
     )
     .join("");
 
@@ -82,18 +82,18 @@ function fliessDiagrammHtml(formular) {
       (g) => `
     <tr>
       <td style="padding:0 0 4px 0;">
-        <div style="display:inline-block;background:#fbe6d8;border:1px solid #e0703c;border-radius:8px;padding:10px 14px;font-family:Arial,Helvetica,sans-serif;font-size:14px;max-width:480px;">
+        <div style="display:inline-block;background:#FBEADA;border:1px solid #C77A2E;border-radius:8px;padding:10px 14px;font-family:Arial,Helvetica,sans-serif;font-size:14px;max-width:480px;">
           <strong>Verzweigung:</strong> ${escapeHtml(g.frage)}<br>
           <span style="font-size:13px;">${escapeHtml(g.optionA)} → ${escapeHtml(g.folgeA)}</span><br>
           <span style="font-size:13px;">${escapeHtml(g.optionB)} → ${escapeHtml(g.folgeB)}</span>
         </div>
       </td>
     </tr>
-    <tr><td style="padding:2px 0 2px 18px;color:#9a958a;font-family:Arial,Helvetica,sans-serif;font-size:14px;">↓</td></tr>`
+    <tr><td style="padding:2px 0 2px 18px;color:#4A5670;font-family:Arial,Helvetica,sans-serif;font-size:14px;">↓</td></tr>`
     )
     .join("");
 
-  const ende = zelle(`<strong>Ende:</strong> ${escapeHtml(formular.ergebnis)}`, "#2f5d62").replace(
+  const ende = zelle(`<strong>Ende:</strong> ${escapeHtml(formular.ergebnis)}`, "#1D6E63").replace(
     /<tr><td style="padding:2px[^<]*<\/td><\/tr>$/,
     ""
   ); // kein Pfeil nach dem letzten Element
@@ -126,31 +126,31 @@ export function bauMail(eintrag) {
 
   const fehlendeHtml = analyse.fehlendeOptionalAngaben.length
     ? `
-    <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1f2430;">
+    <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#152238;">
       Eine Kleinigkeit noch, falls Du kurz Zeit hast — dann wird das Bild noch genauer:
     </p>
-    <ul style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1f2430;">
+    <ul style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#152238;">
       ${analyse.fehlendeOptionalAngaben.map((a) => `<li>${escapeHtml(a)}</li>`).join("")}
     </ul>
-    <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#8a8577;">
+    <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#4A5670;">
       Kein Muss — auch ohne das können wir Dir schon zeigen, was wir sehen.
     </p>`
     : "";
 
   const vorschlagHtml = vorschlag
     ? `
-    <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1f2430;">
+    <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#152238;">
       ${vorschlag.anteilText} Bei ähnlich gelagerten Abläufen sehen wir erfahrungsgemäß, dass sich der
       Zeitaufwand für solche Teilschritte häufig um etwa <strong>20–40 %</strong> senken lässt, wenn
       Medienbrüche (Papier → Excel → Telefon) wegfallen.
     </p>
-    ${vorschlag.ursachenText ? `<p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1f2430;">${vorschlag.ursachenText}</p>` : ""}
-    <p style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#8a8577;">
+    ${vorschlag.ursachenText ? `<p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#152238;">${vorschlag.ursachenText}</p>` : ""}
+    <p style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#4A5670;">
       Wichtig: Das ist eine grobe Einschätzung auf Basis Deiner Angaben, keine Zusage — wie viel sich
       bei Dir konkret realisieren lässt, sehen wir am besten in einem kurzen, unverbindlichen Gespräch.
     </p>`
     : `
-    <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1f2430;">
+    <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#152238;">
       Dein Ablauf wirkt schon recht digital unterwegs — hier würden wir im Gespräch gezielt nachfragen,
       wo im Detail noch Zeit verloren geht, bevor wir eine Einschätzung wagen.
     </p>`;
@@ -158,7 +158,7 @@ export function bauMail(eintrag) {
   const betreff = `Deine Digitalisierungs-Analyse: „${f.prozessName}“ bei ${f.firma.name}`;
 
   const html = `
-<div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;color:#1f2430;">
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;color:#152238;">
   <p>Hallo${name ? " " + escapeHtml(name) : ""},</p>
 
   <p>
@@ -169,10 +169,10 @@ export function bauMail(eintrag) {
 
   ${fehlendeHtml}
 
-  <h3 style="color:#1f4245;">So läuft der Ablauf heute (IST)</h3>
+  <h3 style="color:#152238;">So läuft der Ablauf heute (IST)</h3>
   ${diagramm}
 
-  <h3 style="color:#1f4245;">Wo wir Potenzial sehen</h3>
+  <h3 style="color:#152238;">Wo wir Potenzial sehen</h3>
   ${vorschlagHtml}
 
   <p>
