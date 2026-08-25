@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wie digital ist deine Firma wirklich? · Schnell-Check</title>
+<style>
+  :root{
+    --ink:#152238; --ink2:#4A5670; --paper:#F6F7FA; --card:#FFFFFF;
+    --line:#E1E5EC; --accent:#1D6E63; --accent-light:#E4F1EE;
+    --warn:#C77A2E; --warn-light:#FBEADA; --danger:#B84A3F; --danger-light:#FBE4E1;
+    --radius:16px; --shadow:0 10px 26px rgba(21,34,56,.08);
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  body{margin:0; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; background:var(--paper); color:var(--ink); line-height:1.55;}
+  .wrap{max-width:640px; margin:0 auto; padding:2.4rem 1.3rem 4rem;}
+
+  .eyebrow{font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--accent); margin-bottom:.6rem;}
+  h1{font-size:clamp(1.6rem,4vw,2.1rem); line-height:1.18; letter-spacing:-.02em; margin:0 0 .6rem;}
+  .lead{color:var(--ink2); font-size:1rem; margin:0 0 2rem; max-width:56ch;}
+
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:1.6rem 1.5rem;}
+
+  /* Fortschritt */
+  .progress-row{display:flex; align-items:center; gap:.8rem; margin-bottom:1.4rem;}
+  .progress-track{flex:1; height:6px; border-radius:99px; background:var(--line); overflow:hidden;}
+  .progress-fill{height:100%; background:var(--accent); border-radius:99px; transition:width .25s;}
+  .progress-num{font-size:.78rem; font-weight:700; color:var(--ink2); white-space:nowrap;}
+
+  .q-title{font-size:1.12rem; font-weight:700; margin:0 0 1.1rem; letter-spacing:-.01em;}
+
+  .opt{display:block; width:100%; text-align:left; background:var(--paper); border:1.5px solid var(--line); border-radius:12px; padding:.85rem 1rem; margin-bottom:.6rem; font-size:.95rem; color:var(--ink); cursor:pointer; transition:border-color .15s, background .15s;}
+  .opt:hover{border-color:var(--accent); background:var(--accent-light);}
+  .opt:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+  .nav-row{display:flex; justify-content:space-between; align-items:center; margin-top:1.2rem;}
+  .btn-back{background:none; border:none; color:var(--ink2); font-size:.85rem; cursor:pointer; padding:.4rem 0;}
+  .btn-back:hover{color:var(--ink);}
+  .btn-back:disabled{visibility:hidden;}
+
+  /* Ergebnis */
+  .result-badge{display:inline-flex; align-items:center; gap:.5em; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; padding:.4em .9em; border-radius:99px; margin-bottom:1rem;}
+  .result-badge.low{background:var(--accent-light); color:var(--accent);}
+  .result-badge.mid{background:var(--warn-light); color:var(--warn);}
+  .result-badge.high{background:var(--danger-light); color:var(--danger);}
+  .result-badge .dot{width:7px;height:7px;border-radius:50%;background:currentColor;}
+
+  .result-headline{font-size:1.5rem; font-weight:700; letter-spacing:-.02em; margin:0 0 .7rem;}
+  .result-text{color:var(--ink2); font-size:.98rem; margin:0 0 1.6rem; max-width:56ch;}
+
+  .meter-track{height:10px; border-radius:99px; background:var(--line); overflow:hidden; margin-bottom:1.8rem;}
+  .meter-fill{height:100%; border-radius:99px; transition:width .5s ease;}
+  .meter-fill.low{background:var(--accent);}
+  .meter-fill.mid{background:var(--warn);}
+  .meter-fill.high{background:var(--danger);}
+
+  .cta-box{border-top:1px solid var(--line); padding-top:1.4rem; margin-top:.4rem;}
+  .cta-title{font-size:1.02rem; font-weight:700; margin:0 0 .4rem;}
+  .cta-text{color:var(--ink2); font-size:.92rem; margin:0 0 1.1rem;}
+
+  label{display:block; font-size:.78rem; font-weight:600; color:var(--ink2); margin:0 0 .3rem;}
+  input[type=text],input[type=email],input[type=tel]{width:100%; border:1.5px solid var(--line); border-radius:10px; padding:.65rem .8rem; font-size:.94rem; font-family:inherit; margin-bottom:.9rem; background:var(--paper); color:var(--ink);}
+  input:focus{outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent);}
+
+  .consent-row{display:flex; gap:.6rem; align-items:flex-start; margin-bottom:1.1rem;}
+  .consent-row input{margin-top:.25rem;}
+  .consent-row span{font-size:.8rem; color:var(--ink2);}
+
+  .btn-primary{width:100%; background:var(--accent); color:#fff; border:none; border-radius:10px; padding:.85rem 1rem; font-size:.98rem; font-weight:700; cursor:pointer; font-family:inherit;}
+  .btn-primary:hover{background:#155A51;}
+  .btn-primary:disabled{background:var(--line); color:var(--ink2); cursor:not-allowed;}
+
+  .fine-print{font-size:.72rem; color:var(--ink2); margin-top:.9rem; text-align:center;}
+
+  .thanks{text-align:center; padding:1rem 0;}
+  .thanks-icon{width:52px;height:52px; border-radius:50%; background:var(--accent-light); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:1.6rem; margin:0 auto 1rem;}
+  .restart-link{display:inline-block; margin-top:1.2rem; font-size:.85rem; color:var(--accent); cursor:pointer; text-decoration:underline; background:none; border:none; font-family:inherit;}
+
+  .hidden{display:none !important;}
+
+  @media (max-width:480px){ .wrap{padding:1.6rem 1rem 3rem;} .card{padding:1.3rem 1.1rem;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">Schnell-Check · 2 Minuten</div>
+  <h1>Wie digital ist deine Firma wirklich?</h1>
+  <p class="lead">5 kurze Fragen, ehrliche Einschätzung. Am Ende siehst du direkt, wo ihr steht.</p>
+
+  <div class="card">
+
+    <!-- Quiz-Bereich -->
+    <div id="quiz-view">
+      <div class="progress-row">
+        <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:20%"></div></div>
+        <div class="progress-num"><span id="q-current">1</span> / <span id="q-total">5</span></div>
+      </div>
+      <div class="q-title" id="q-title"></div>
+      <div id="q-options"></div>
+      <div class="nav-row">
+        <button class="btn-back" id="btn-back">← Zurück</button>
+      </div>
+    </div>
+
+    <!-- Ergebnis-Bereich -->
+    <div id="result-view" class="hidden">
+      <div class="result-badge" id="result-badge"><span class="dot"></span><span id="result-badge-text"></span></div>
+      <div class="result-headline" id="result-headline"></div>
+      <p class="result-text" id="result-text"></p>
+      <div class="meter-track"><div class="meter-fill" id="meter-fill" style="width:0%"></div></div>
+
+      <div class="cta-box">
+        <div class="cta-title">Kostenlose Einschätzung für eure Firma anfragen</div>
+        <p class="cta-text">Wir schauen uns eure Situation genauer an und zeigen euch konkret: wo ihr steht, wo ihr hinkönnt, was es kostet, was es spart.</p>
+
+        <form id="lead-form">
+          <label for="f-name">Name</label>
+          <input type="text" id="f-name" required>
+
+          <label for="f-firma">Firma</label>
+          <input type="text" id="f-firma" required>
+
+          <label for="f-email">E-Mail</label>
+          <input type="email" id="f-email" required>
+
+          <label for="f-tel">Telefon <span style="font-weight:400;">(optional)</span></label>
+          <input type="tel" id="f-tel">
+
+          <div class="consent-row">
+            <input type="checkbox" id="f-consent" required>
+            <span>Ich bin einverstanden, dass ihr mich zu diesem Anliegen kontaktiert. <!-- TODO: echten Datenschutz-/Einwilligungstext + Link zur Datenschutzerklärung einsetzen, bevor das live geht --></span>
+          </div>
+
+          <button type="submit" class="btn-primary">Einschätzung anfragen</button>
+        </form>
+        <div class="fine-print">Keine automatische Weiterverarbeitung – ihr meldet euch persönlich zurück.</div>
+      </div>
+    </div>
+
+    <!-- Danke-Bereich -->
+    <div id="thanks-view" class="hidden">
+      <div class="thanks">
+        <div class="thanks-icon">✓</div>
+        <div class="result-headline">Danke, das war's!</div>
+        <p class="result-text" style="margin:0 auto;">Wir melden uns in Kürze bei dir.</p>
+        <button class="restart-link" id="btn-restart">Check nochmal durchlaufen</button>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="fine-print" style="margin-top:1.4rem;">Dieser Check ersetzt keine vollständige Analyse, gibt aber eine erste, ehrliche Richtung.</p>
+</div>
+
+<script>
+  // ---------------------------------------------------------------
+  // WICHTIG: Dieses Formular sendet aktuell NICHTS an einen Server.
+  // Es simuliert nur lokal ein "Absenden" (Konsolen-Log + Danke-Screen).
+  // Vor dem Live-Gang muss noch ein echter Empfang angebunden werden,
+  // z.B. Formspree, ein einfaches E-Mail-Backend oder Supabase.
+  // ---------------------------------------------------------------
+
+  const QUESTIONS = [
+    {
+      title: "Wie laufen eure Kernprozesse heute überwiegend ab?",
+      options: [
+        { text: "Papier, Excel-Listen oder mündliche Absprachen", score: 2 },
+        { text: "Ein Mix aus Software und manuellen Schritten", score: 1 },
+        { text: "Durchgängig in digitalen Systemen", score: 0 },
+      ]
+    },
+    {
+      title: "Wie tauscht ihr Infos zwischen Abteilungen aus?",
+      options: [
+        { text: "Persönlich, per Zuruf oder Zettel", score: 2 },
+        { text: "E-Mail oder Chat, aber ohne zentrales System", score: 1 },
+        { text: "Gemeinsames System mit klaren Zuständigkeiten", score: 0 },
+      ]
+    },
+    {
+      title: "Wie viel Zeit geht wöchentlich für wiederkehrende manuelle Aufgaben drauf (Dateneingabe, Copy-Paste, Listen pflegen)?",
+      options: [
+        { text: "Spürbar viel – mehrere Stunden pro Woche", score: 2 },
+        { text: "Etwas, aber im Rahmen", score: 1 },
+        { text: "Kaum, das meiste läuft automatisch", score: 0 },
+      ]
+    },
+    {
+      title: "Setzt ihr aktuell Automatisierung oder KI-Tools im Arbeitsalltag ein?",
+      options: [
+        { text: "Nein, noch gar nicht", score: 2 },
+        { text: "Vereinzelt, in einzelnen Bereichen", score: 1 },
+        { text: "Ja, regelmäßig und mit klarem Nutzen", score: 0 },
+      ]
+    },
+    {
+      title: "Könnt ihr jederzeit auf aktuelle Kennzahlen zugreifen, um Entscheidungen zu treffen?",
+      options: [
+        { text: "Kaum – Zahlen sind verstreut oder veraltet", score: 2 },
+        { text: "Mit etwas Aufwand zusammensuchbar", score: 1 },
+        { text: "Ja, jederzeit aktuell verfügbar", score: 0 },
+      ]
+    },
+  ];
+  const MAX_SCORE = QUESTIONS.length * 2;
+
+  let current = 0;
+  const answers = new Array(QUESTIONS.length).fill(null);
+
+  const quizView = document.getElementById('quiz-view');
+  const resultView = document.getElementById('result-view');
+  const thanksView = document.getElementById('thanks-view');
+  const qTitle = document.getElementById('q-title');
+  const qOptions = document.getElementById('q-options');
+  const qCurrent = document.getElementById('q-current');
+  const progressFill = document.getElementById('progress-fill');
+  const btnBack = document.getElementById('btn-back');
+
+  function renderQuestion(){
+    const q = QUESTIONS[current];
+    qTitle.textContent = q.title;
+    qCurrent.textContent = current + 1;
+    progressFill.style.width = ((current + 1) / QUESTIONS.length * 100) + '%';
+    btnBack.disabled = current === 0;
+
+    qOptions.innerHTML = '';
+    q.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.type = 'button';
+      btn.textContent = opt.text;
+      btn.addEventListener('click', () => selectAnswer(opt.score));
+      qOptions.appendChild(btn);
+    });
+  }
+
+  function selectAnswer(score){
+    answers[current] = score;
+    if (current < QUESTIONS.length - 1){
+      current++;
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  btnBack.addEventListener('click', () => {
+    if (current > 0){
+      current--;
+      renderQuestion();
+    }
+  });
+
+  function showResult(){
+    const total = answers.reduce((a,b) => a + (b||0), 0);
+    const pct = Math.round(total / MAX_SCORE * 100);
+
+    quizView.classList.add('hidden');
+    resultView.classList.remove('hidden');
+
+    const badge = document.getElementById('result-badge');
+    const badgeText = document.getElementById('result-badge-text');
+    const headline = document.getElementById('result-headline');
+    const text = document.getElementById('result-text');
+    const meter = document.getElementById('meter-fill');
+
+    let level;
+    if (total <= 3){ level = 'low'; }
+    else if (total <= 6){ level = 'mid'; }
+    else { level = 'high'; }
+
+    const copy = {
+      low: {
+        badge: 'Digitalisierungsbedarf: gering',
+        headline: 'Ihr seid schon gut aufgestellt.',
+        text: 'Eure Prozesse laufen weitgehend digital und automatisiert. Es gibt vermutlich noch einzelne Stellschrauben – eine kurze Einschätzung von außen zeigt euch, wo genau.'
+      },
+      mid: {
+        badge: 'Digitalisierungsbedarf: mittel',
+        headline: 'Da geht noch spürbar was.',
+        text: 'Ihr habt schon digitale Ansätze, aber auch klare Lücken – vermutlich kostet euch das jede Woche Zeit. Eine genaue Analyse zeigt, wo der größte Hebel liegt.'
+      },
+      high: {
+        badge: 'Digitalisierungsbedarf: hoch',
+        headline: 'Hier liegt viel Potenzial.',
+        text: 'Vieles läuft aktuell noch manuell – das kostet Zeit, Nerven und wahrscheinlich auch Geld. Eine strukturierte Analyse würde euch schnell zeigen, wo ihr am meisten gewinnt.'
+      }
+    };
+
+    badge.className = 'result-badge ' + level;
+    meter.className = 'meter-fill ' + level;
+    badgeText.textContent = copy[level].badge;
+    headline.textContent = copy[level].headline;
+    text.textContent = copy[level].text;
+    meter.style.width = pct + '%';
+  }
+
+  document.getElementById('lead-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    const lead = {
+      name: document.getElementById('f-name').value,
+      firma: document.getElementById('f-firma').value,
+      email: document.getElementById('f-email').value,
+      telefon: document.getElementById('f-tel').value,
+    };
+    // TODO: hier echten Versand einbauen (Formspree/E-Mail/Supabase) statt console.log
+    console.log('Lead erfasst (noch nicht versendet):', lead);
+
+    resultView.classList.add('hidden');
+    thanksView.classList.remove('hidden');
+  });
+
+  document.getElementById('btn-restart').addEventListener('click', () => {
+    current = 0;
+    answers.fill(null);
+    thanksView.classList.add('hidden');
+    resultView.classList.add('hidden');
+    quizView.classList.remove('hidden');
+    renderQuestion();
+  });
+
+  renderQuestion();
+</script>
+</body>
+</html>

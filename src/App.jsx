@@ -43,10 +43,39 @@ function offenePunkteFuerSchritt(fehlerObj, stepIndex) {
   );
 }
 
+// Wer über den kostenlosen digital-check.html-Quiz hierher kommt, hat Name/Firma/
+// E-Mail/Telefon schon dort angegeben — per Query-String übergeben, damit man
+// hier nicht nochmal von vorn anfängt.
+function leadAusUrl() {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.get("email") && !params.get("firma")) return null;
+  return {
+    name: params.get("name") || "",
+    firma: params.get("firma") || "",
+    email: params.get("email") || "",
+    telefon: params.get("telefon") || "",
+  };
+}
+
+function formularMitLead(lead) {
+  const leer = leeresFormular();
+  if (!lead) return leer;
+  return {
+    ...leer,
+    firma: {
+      ...leer.firma,
+      name: lead.firma,
+      kontaktName: lead.name,
+      kontaktEmail: lead.email,
+      telefon: lead.telefon,
+    },
+  };
+}
+
 export default function App() {
-  const [gestartet, setGestartet] = useState(false);
+  const [gestartet, setGestartet] = useState(() => leadAusUrl() !== null);
   const [step, setStep] = useState(0);
-  const [formular, setFormular] = useState(leeresFormular());
+  const [formular, setFormular] = useState(() => formularMitLead(leadAusUrl()));
   const [status, setStatus] = useState("entwurf"); // entwurf | senden | ok | fehlgeschlagen
   const bodyRef = useRef(null);
 
