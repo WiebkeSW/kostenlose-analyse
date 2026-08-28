@@ -76,6 +76,7 @@ export function leeresFormular() {
       kontaktName: "",
       kontaktEmail: "",
       telefon: "",
+      meineRolle: "",
     },
     prozessName: "",
     // WER

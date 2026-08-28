@@ -315,6 +315,14 @@ function StepSteckbrief({ formular, update, fehler }) {
           {fehler["firma.kontaktName"] && <Err text={fehler["firma.kontaktName"]} />}
         </label>
         <label>
+          Deine Rolle in der Firma (freiwillig)
+          <input
+            value={f.meineRolle}
+            onChange={(e) => setFirma({ meineRolle: e.target.value })}
+            placeholder="z. B. Geschäftsführung, Buchhaltung, Assistenz der GF"
+          />
+        </label>
+        <label>
           E-Mail
           <input
             type="email"
